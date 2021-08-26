@@ -86,9 +86,17 @@ app.put("/games/:id", (req, res) => {
 });
 
 app.delete("/games/:id", (req, res) => {
-    const id = req.params.id - 1;
-    delete games[id];
-    res.send("Successfully DELETED the game!")
+    const id = +req.params.id;
+
+    const gameIndex = games.findIndex(game => game.id === id)
+
+    if (gameIndex < 0) {
+        res.status(404).send({error: "Game not found."})
+        return;
+    }
+
+    games.splice(gameIndex, 1)
+    res.send({message: "Successfully DELETED the game!"})
 });
 
 
