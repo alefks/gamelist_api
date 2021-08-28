@@ -6,6 +6,11 @@ app.use(express.json());
 const port = 3000;
 const games = [];
 
+// Função responsável por fazer o getById de filmes:
+const getGameById = id => games.find(game => game.id === id)
+
+// Função responsável por fazer o getByIndex de filmes:
+const getGameIndexById = id => games.findIndex(game => game.id === id)
 
 // GET - Home
 app.get("/", (req, res) => {
@@ -22,8 +27,7 @@ app.get("/games", (req, res) => {
 // GET /games/id - get game by id
 app.get("/games/:gameID", (req, res) => {
     const id = +req.params.gameID;
-    const game = games.find((game) => game.id === id);
-
+    const game = getGameById(id)
     !game
         ? res.status(404).send({error: "Game doesn't exist."})
         : res.json({ game });
@@ -58,7 +62,7 @@ app.put("/games/:id", (req, res) => {
     const id = + req.params.id;
 
     // findIndex retorna a posição do objeto dentro do array (games), caso não exista retorna -1
-    const gameIndex = games.findIndex(game => game.id === id)
+    const gameIndex = getGameIndexById(id)
 
     // Validação para verificar se o filme existe no array
     if (gameIndex < 0) {
@@ -77,7 +81,7 @@ app.put("/games/:id", (req, res) => {
     }
 
     // Procura o filme cadastrado no meu array pelo ID passado no parâmetro, e insiro o objeto inteiro, dentro da const filme.
-    const game = games.find(game => game.id === id)
+    const game = getGameById(id)
     newGame.id  = game.id
 
     games[gameIndex] = newGame;
@@ -88,7 +92,7 @@ app.put("/games/:id", (req, res) => {
 app.delete("/games/:id", (req, res) => {
     const id = +req.params.id;
 
-    const gameIndex = games.findIndex(game => game.id === id)
+    const gameIndex = getGameIndexById(id)
 
     if (gameIndex < 0) {
         res.status(404).send({error: "Game not found."})
