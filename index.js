@@ -6,11 +6,15 @@ app.use(express.json());
 const port = 3000;
 const games = [];
 
+// Função responsável por pegar games válidos:
+const getValidGames = () => games.filter(Boolean)
+
+
 // Função responsável por fazer o getById de filmes:
-const getGameById = id => games.find(game => game.id === id)
+const getGameById = id => getValidGames().find(game => game.id === id)
 
 // Função responsável por fazer o getByIndex de filmes:
-const getGameIndexById = id => games.findIndex(game => game.id === id)
+const getGameIndexById = id => getValidGames().findIndex(game => game.id === id)
 
 // GET - Home
 app.get("/", (req, res) => {
