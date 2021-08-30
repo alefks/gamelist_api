@@ -31,13 +31,58 @@ app.get('/games/:id', async (req, res) => {
 
     const game = await gameSchema.findById(id);
 
-    if(!filme){
+    if(!game){
+        res.status(404).send({error: 'Game not found'})
+        return;
+    }
+    res.send({game});
+})
+
+
+
+// POST - Create a new game
+app.post('/games', async (req, res) => {
+    const game = req.body;
+
+    if(!game || !game.name || !game.genre){
+        res.status(400).send({error: 'Invalid game.'});
+        return;
+    }
+
+    const newGame = await new gameSchema(game).save();
+
+    res.status(201).send({newGame})
+})
+
+
+// PUT - /games/:id - UPDATE a game
+app.put('/games/:id', async (req, res) => {
+    const id = req.params.id;
+
+    if( !mongoose.Types.ObjectId.isValid(id) ) {
+        res.status(422).send({error: 'Invalid ID'})
+        return;
+    }
+
+    const game = await gameSchema.findById(id);
+
+    if(!game){
         res.status(404).send({error: 'Game not found'})
         return;
     }
 
-    res.send({game});
+    const newGame = req.body;
 
+    if(!game || !game.name || !game.genre){
+        res.status(400).send({error: 'Invalid game.'});
+        return;
+    }
+
+    await gameSchema.findOneAndUpdate({_id: id}, newGame);
+    const updateGame = await gameSchema.findById(id);
+
+    res.send({updateGame})
+    
 })
 
 
