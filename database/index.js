@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connection("mongodb://localhost/db_games", {
+mongoose.connect("mongodb://localhost:27017/db_games", {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
+    useUnifiedTopology: true
 });
 
 module.exports = mongoose;
